@@ -1,21 +1,28 @@
 package com.example.insuranceproject.controller;
 
+import com.example.insuranceproject.model.House;
 import com.example.insuranceproject.model.Person;
+import com.example.insuranceproject.model.Vehicle;
 import com.example.insuranceproject.service.PersonService;
+import com.example.insuranceproject.service.VehicleService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 @RequestMapping("/person")
 public class PersonController {
 
     private final PersonService personService;
+
+    private final VehicleService vehicleService;
 
     @GetMapping("/")
     public List<Person> getAll() {
@@ -30,6 +37,17 @@ public class PersonController {
     @PostMapping("/")
     public Person createNewPerson(@Valid @RequestBody Person person){
         return personService.createNewPerson(person);
+    }
+
+    @PutMapping("/house/{tcNumber}")
+    public ResponseEntity<?> addHouse(@PathVariable("tcNumber") Integer tcNumber, @Valid @RequestBody House house){
+        return personService.addHouse(tcNumber, house);
+    }
+
+    @PutMapping("/vehicle/{tcNumber}")
+    public ResponseEntity<?> addVehicle(@PathVariable("tcNumber") Integer tcNumber, @Valid @RequestBody Vehicle vehicle){
+        vehicleService.createNewVehicle(vehicle);
+        return personService.addVehicle(tcNumber, vehicle);
     }
 
 }

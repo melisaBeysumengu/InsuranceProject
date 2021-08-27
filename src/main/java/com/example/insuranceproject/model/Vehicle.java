@@ -28,18 +28,19 @@ public class Vehicle {
     @NotBlank
     private String color;
 
-    @NotBlank
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;
 
-    @NotBlank
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    @NotBlank
     @OneToMany
     private List<Offer> policies;
+
+    @NotBlank
+    @Column(length = 17)
+    private String chassisNumber;
 
 }
