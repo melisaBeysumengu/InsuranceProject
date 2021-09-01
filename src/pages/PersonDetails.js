@@ -11,9 +11,9 @@ const PersonDetails = () => {
     const onFinish = async (values) => {
         console.log("Success:", values);
         const response = await PersonService.createUser(credentials)
-        if (response && response.data) {
-            console.log(response.data)
-            return true;
+        if (response) {
+            console.log(response)
+            return response;
         } else {
             return false;
         }
@@ -33,6 +33,7 @@ const PersonDetails = () => {
 
     return (
         <div>
+        <h1>Kullanıcı Oluştur</h1>
             <div>
                 <Form
                     name="basic"

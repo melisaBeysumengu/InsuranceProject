@@ -1,20 +1,23 @@
 import { Form, Input, Button } from "antd";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
+import PersonService from '../services/PersonService';
+import ListPerson from "./ListPerson";
 
 const Home = () => {
   const history = useHistory();
   const [credentials, setCredentials] = useState({});
+  const [user, setUser] = useState({});
 
   const onFinish = async (values) => {
     console.log("Success:", values);
-    // const response = await AuthService.signin(credentials);
-    // if (response) {
-    //   history.push("/welcome");
-    // } else {
-    //   alert("Something went wrong! Try again.")
-    // }
-  };
+    const response = await PersonService.getUser(credentials)
+    if (response) {
+        history.push(`/list-person/${credentials.tcNumber}`)
+    } else {
+        return false;
+    }
+};
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -29,6 +32,7 @@ const Home = () => {
 
   return (
     <div>
+      <h1>Teklif Al</h1>
       <Form
         name="basic"
         labelCol={{
@@ -45,36 +49,21 @@ const Home = () => {
         style={{ margin: "0 auto", width: 400 }}
       >
         <Form.Item
-          label="Username"
-          name="username"
+          label="TC Kimlik No"
+          name="tcNumber"
           rules={[
             {
               required: true,
-              message: "Please input your username!"
+              message: "Lütfen kimlik numaranızı girin!"
             }
           ]}
         >
           <Input
+            type="number"
             onChange={handleChange}
-            name="username"
-            value={credentials.username}
-          />
-        </Form.Item>
+            name="tcNumber"
+            value={Number(credentials.tcNumber)}
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!"
-            }
-          ]}
-        >
-          <Input.Password
-            onChange={handleChange}
-            name="password"
-            value={credentials.password}
           />
         </Form.Item>
 
@@ -88,19 +77,11 @@ const Home = () => {
             Submit
           </Button>
         </Form.Item>
-        <h4
-          fontSize="xs"
-          color="gray.400"
-          lineHeight="tall"
-          fontFamily="body"
-        >
-          Don't have an account?
-          <a href="/sign-up"> Sign-up</a>
-        </h4>
 
 
       </Form>
 
+        <h1>{user ? user.data : ""  }</h1>
     </div>
   );
 };

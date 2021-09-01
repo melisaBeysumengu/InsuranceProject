@@ -8,6 +8,7 @@ import PersonDetails from "./pages/PersonDetails";
 import VehicleDetails from "./pages/VehicleDetails";
 import CreateOffer from "./pages/CreateOffer";
 import MySteps from "./pages/MySteps";
+import ListPerson from "./pages/ListPerson";
 
 const { Header, Content, Footer , Sider} = Layout;
 
@@ -38,14 +39,18 @@ class App extends Component {
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
               <Menu.Item key="1">
-                <span>Anasayfa</span>
+                <span>Teklif Al</span>
                 <Link to="/" />
               </Menu.Item>
               <Menu.Item key="2">
-                <span>Teklif Al</span>
-                <Link to="/my-steps" />
+                <span>Kullanıcı Ekle</span>
+                <Link to="/person-details" />
               </Menu.Item>
               <Menu.Item key="3">
+                <span>Araç Ekle</span>
+                <Link to="/vehicle-details" />
+              </Menu.Item>
+              <Menu.Item key="4">
                 <span>Teklif Yarat</span>
                 <Link to="/create-offer" />
               </Menu.Item>
@@ -67,6 +72,7 @@ class App extends Component {
               <Route path="/vehicle-details" component={VehicleDetails} />
               <Route path="/create-offer" component={CreateOffer} />
               <Route path="/my-steps" component={MySteps} />
+              <Route path="/list-person/:tc" component={ListPerson} />
             </Content>
           </Layout>
         </Layout>

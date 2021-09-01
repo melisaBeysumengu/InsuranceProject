@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Input, Button } from "antd";
 import { useHistory } from "react-router-dom";
+import OfferService from '../services/OfferService';
 
 const CreateOffer = () => {
 
@@ -9,12 +10,13 @@ const CreateOffer = () => {
 
     const onFinish = async (values) => {
         console.log("Success:", values);
-        //const response = await AuthService.signin(credentials);
-        // if (response) {
-        //     history.push("/welcome");
-        // } else {
-        //     alert("Something went wrong! Try again.")
-        // }
+        const response = await OfferService.createOffer(credentials)
+        if (response && response.data) {
+            console.log(response.data.tcNumber)
+            return true;
+        } else {
+            return false;
+        }
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -36,7 +38,7 @@ const CreateOffer = () => {
 
     return (
         <div>
-            <h1>Create Offer</h1>
+            <h1>Teklif Oluştur</h1>
             <div>
                 <Form
                     name="basic"

@@ -6,34 +6,25 @@ const PersonService = (function () {
     }
 
     const _createUser = async (credentials) => {
-        // let user = null;
-        // try {
-        //     const response = await axios.post(
-        //         "http://localhost:8080/person/",
-        //         credentials
-        //     );
-        //     if (response && response.data) {
-        // console.log(response);
-        //         user = response.data;
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
-
-        // return user;
-        console.log(credentials)
         const request = await axios.post("http://localhost:8080/person/",credentials)
-        .then((response) => {console.log(response.data)})
+        .then((response) => response.data.tcNumber)
         .catch((error) => error);
+        return request
+    };
 
+    const _getUser = async (credentials) => {
+        console.log(credentials)
+        const request = await axios.get(`http://localhost:8080/person/${credentials.tcNumber}`,credentials)
+        .then((response) => response.data)
+        .catch((error) => error);
         console.log(request)
-
         return request
 
     };
 
     return {
-        createUser: _createUser
+        createUser: _createUser,
+        getUser: _getUser
     };
 })();
 
