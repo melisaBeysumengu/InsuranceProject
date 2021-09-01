@@ -50,4 +50,14 @@ public class PersonController {
         return personService.addVehicle(tcNumber, vehicle);
     }
 
+    @GetMapping("/vehicle/{tcNumber}")
+    public List<Vehicle> getVehicles(@PathVariable("tcNumber") Integer tcNumber){
+        return personService.findByTcNo(tcNumber).getVehicles();
+    }
+
+    @GetMapping("/house/{tcNumber}")
+    public List<House> getHouses(@PathVariable("tcNumber") Integer tcNumber){
+        return personService.findByTcNo(tcNumber).getHouses();
+    }
+
 }
