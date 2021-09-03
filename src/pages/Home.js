@@ -2,7 +2,6 @@ import { Form, Input, Button } from "antd";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import PersonService from '../services/PersonService';
-import ListPerson from "./ListPerson";
 
 const Home = () => {
   const history = useHistory();
@@ -13,7 +12,7 @@ const Home = () => {
     console.log("Success:", values);
     const response = await PersonService.getUser(credentials)
     if (response) {
-        history.push(`/list-person/${credentials.tcNumber}`)
+        history.push(`/list-vehicle/${credentials.tcNumber}`)
     } else {
         return false;
     }

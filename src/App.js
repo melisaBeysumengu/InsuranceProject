@@ -8,6 +8,8 @@ import PersonDetails from "./pages/PersonDetails";
 import VehicleDetails from "./pages/VehicleDetails";
 import CreateOffer from "./pages/CreateOffer";
 import MySteps from "./pages/MySteps";
+import ListVehicle from "./pages/ListVehicle";
+import ListOffers from "./pages/ListOffers";
 import ListPerson from "./pages/ListPerson";
 
 const { Header, Content, Footer , Sider} = Layout;
@@ -51,6 +53,10 @@ class App extends Component {
                 <Link to="/vehicle-details" />
               </Menu.Item>
               <Menu.Item key="4">
+                <span>Kullanıcılar</span>
+                <Link to="/list-person" />
+              </Menu.Item>
+              <Menu.Item key="5">
                 <span>Teklif Yarat</span>
                 <Link to="/create-offer" />
               </Menu.Item>
@@ -72,7 +78,9 @@ class App extends Component {
               <Route path="/vehicle-details" component={VehicleDetails} />
               <Route path="/create-offer" component={CreateOffer} />
               <Route path="/my-steps" component={MySteps} />
-              <Route path="/list-person/:tc" component={ListPerson} />
+              <Route path="/list-vehicle/:tc" component={ListVehicle} />
+              <Route path="/list-offers/:chassisNumber" component={ListOffers} />
+              <Route path="/list-person/" component={ListPerson} />
             </Content>
           </Layout>
         </Layout>

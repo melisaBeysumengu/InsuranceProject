@@ -5,7 +5,6 @@ import PersonService from '../services/PersonService';
 
 const PersonDetails = () => {
 
-    const history = useHistory();
     const [credentials, setCredentials] = useState({});
 
     const onFinish = async (values) => {
