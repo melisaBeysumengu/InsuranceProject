@@ -6,15 +6,13 @@ import com.example.insuranceproject.model.Vehicle;
 import com.example.insuranceproject.service.PersonService;
 import com.example.insuranceproject.service.VehicleService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@Slf4j
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/person")
@@ -34,30 +32,40 @@ public class PersonController {
         return personService.findByTcNo(tcNumber);
     }
 
+    @PutMapping("/")
+    public ResponseEntity<?> updatePerson(@Valid @RequestBody Person person) {
+        return personService.updatePerson(person);
+    }
+
     @PostMapping("/")
-    public Person createNewPerson(@Valid @RequestBody Person person){
+    public ResponseEntity<?> createNewPerson(@Valid @RequestBody Person person) {
         return personService.createNewPerson(person);
     }
 
     @PutMapping("/house/{tcNumber}")
-    public ResponseEntity<?> addHouse(@PathVariable("tcNumber") Integer tcNumber, @Valid @RequestBody House house){
+    public ResponseEntity<?> addHouse(@PathVariable("tcNumber") Integer tcNumber, @Valid @RequestBody House house) {
         return personService.addHouse(tcNumber, house);
     }
 
     @PutMapping("/vehicle/{tcNumber}")
-    public ResponseEntity<?> addVehicle(@PathVariable("tcNumber") Integer tcNumber, @Valid @RequestBody Vehicle vehicle){
+    public ResponseEntity<?> addVehicle(@PathVariable("tcNumber") Integer tcNumber,
+                                        @Valid @RequestBody Vehicle vehicle) {
         vehicleService.createNewVehicle(vehicle);
         return personService.addVehicle(tcNumber, vehicle);
     }
 
     @GetMapping("/vehicle/{tcNumber}")
-    public List<Vehicle> getVehicles(@PathVariable("tcNumber") Integer tcNumber){
-        return personService.findByTcNo(tcNumber).getVehicles();
+    public List<Vehicle> getVehicles(@PathVariable("tcNumber") Integer tcNumber) {
+        return personService
+                .findByTcNo(tcNumber)
+                .getVehicles();
     }
 
     @GetMapping("/house/{tcNumber}")
-    public List<House> getHouses(@PathVariable("tcNumber") Integer tcNumber){
-        return personService.findByTcNo(tcNumber).getHouses();
+    public List<House> getHouses(@PathVariable("tcNumber") Integer tcNumber) {
+        return personService
+                .findByTcNo(tcNumber)
+                .getHouses();
     }
 
 }

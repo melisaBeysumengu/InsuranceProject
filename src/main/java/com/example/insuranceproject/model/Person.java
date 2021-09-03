@@ -19,16 +19,12 @@ public class Person {
     @Column(name = "tc_number", nullable = false)
     private Integer tcNumber;
 
-    @NotBlank
     private String name;
 
-    @NotBlank
     private String surname;
 
-    @NotBlank
     private String address;
 
-    @NotNull
     private double income;
 
     @OneToMany

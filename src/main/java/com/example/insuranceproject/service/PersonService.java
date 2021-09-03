@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PersonService {
 
-    Person createNewPerson(Person person);
+    ResponseEntity<?> createNewPerson(Person person);
 
     Person findByTcNo(Integer tcNo);
 
@@ -18,5 +18,7 @@ public interface PersonService {
     ResponseEntity<?> addVehicle(Integer tcNumber, Vehicle vehicle);
 
     ResponseEntity<?> addHouse(Integer tcNumber, House house);
+
+    ResponseEntity<?> updatePerson(Person person);
 
 }

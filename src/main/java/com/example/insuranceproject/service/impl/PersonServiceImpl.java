@@ -22,13 +22,14 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
 
     @Override
-    public Person createNewPerson(Person person) {
-        return personRepository.save(person);
+    public ResponseEntity<?> createNewPerson(Person person) {
+        personRepository.save(person);
+        return ResponseEntity.ok(new MessageResponse("Kullanıcı başarıyla oluşturuldu."));
     }
 
     @Override
     public Person findByTcNo(Integer tcNo) {
-        Objects.requireNonNull(tcNo, "TC number cannot be null");
+        Objects.requireNonNull(tcNo, "TC kimlik numarası boş olamaz!");
         return personRepository.findPersonByTcNumber(tcNo);
     }
 
@@ -41,19 +42,38 @@ public class PersonServiceImpl implements PersonService {
     public ResponseEntity<?> addVehicle(Integer tcNumber, Vehicle vehicle) {
 
         Person p = personRepository.findPersonByTcNumber(tcNumber);
-        p.getVehicles().add(vehicle);
+        p
+                .getVehicles()
+                .add(vehicle);
         personRepository.save(p);
 
-        return ResponseEntity.ok(new MessageResponse("Vehicle saved successfully."));
+        return ResponseEntity.ok(new MessageResponse("Araç başarıyla kaydedildi."));
     }
 
     @Override
     public ResponseEntity<?> addHouse(Integer tcNumber, House house) {
 
         Person p = personRepository.findPersonByTcNumber(tcNumber);
-        p.getHouses().add(house);
+        p
+                .getHouses()
+                .add(house);
         personRepository.save(p);
 
-        return ResponseEntity.ok(new MessageResponse("House saved successfully."));
+        return ResponseEntity.ok(new MessageResponse("Ev başarıyla kaydedildi."));
+    }
+
+    @Override
+    public ResponseEntity<?> updatePerson(Person person) {
+        Person p = personRepository.findPersonByTcNumber(person.getTcNumber());
+        Person newPerson = Person
+                .builder()
+                .tcNumber(p.getTcNumber())
+                .name(person.getName()!=null ? person.getName() : p.getName())
+                .surname(person.getSurname()!=null ? person.getSurname() : p.getSurname())
+                .address(person.getAddress()!=null ? person.getAddress() : p.getAddress())
+                .income(person.getIncome())
+                .build();
+        personRepository.save(newPerson);
+        return ResponseEntity.ok(new MessageResponse("Kullanıcı bilgileri başarıyla düzenlendi."));
     }
 }

@@ -1,17 +1,34 @@
 package com.example.insuranceproject.controller;
 
+import com.example.insuranceproject.model.Offer;
+import com.example.insuranceproject.service.OfferService;
 import com.example.insuranceproject.service.VehicleService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-@Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 @RequestMapping("/vehicle")
 public class VehicleController {
 
     VehicleService vehicleService;
+
+    OfferService offerService;
+
+    //private static final Logger logger = LoggerFactory.getLogger(VehicleController.class);
+
+    @GetMapping("/{chassisNumber}")
+    public List<Offer> getAllOffers(@PathVariable String chassisNumber) {
+        return vehicleService.getAllOffers(chassisNumber);
+    }
+
+    @PutMapping("/{chassisNumber}/{offerId}")
+    public ResponseEntity<?> addOffer(@PathVariable String chassisNumber, @PathVariable Long offerId) {
+        return vehicleService.addOffer(chassisNumber, offerService.getOfferById(offerId));
+    }
 
 }
