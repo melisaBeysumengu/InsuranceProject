@@ -6,7 +6,6 @@ import PersonService from '../services/PersonService';
 const Home = () => {
   const history = useHistory();
   const [credentials, setCredentials] = useState({});
-  const [user, setUser] = useState({});
 
   const onFinish = async (values) => {
     console.log("Success:", values);
@@ -79,8 +78,6 @@ const Home = () => {
 
 
       </Form>
-
-        <h1>{user ? user.data : ""  }</h1>
     </div>
   );
 };

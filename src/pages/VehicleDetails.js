@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { Form, Input, Button, InputNumber } from "antd";
-import { useHistory } from "react-router-dom";
+import { Button, Form, Input } from "antd";
+import React, { useState } from 'react';
 import VehicleService from '../services/VehicleService';
 
 const VehicleDetails = () => {

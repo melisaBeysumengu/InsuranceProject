@@ -1,9 +1,6 @@
 import axios from "axios";
 
 const OfferService = (function () {
-    const headers = {
-        'Content-Type': 'application/json'
-    }
 
     const _createOffer = async (credentials) => {
         console.log(credentials)

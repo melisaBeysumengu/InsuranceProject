@@ -1,16 +1,14 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Layout, Menu } from "antd";
 import "antd/dist/antd.css";
+import React, { Component } from "react";
+import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import "../src/styles.css";
-import { Layout, Menu, Breadcrumb } from "antd";
-import Home from "./pages/Home";
-import PersonDetails from "./pages/PersonDetails";
-import VehicleDetails from "./pages/VehicleDetails";
 import CreateOffer from "./pages/CreateOffer";
-import MySteps from "./pages/MySteps";
-import ListVehicle from "./pages/ListVehicle";
+import Home from "./pages/Home";
 import ListOffers from "./pages/ListOffers";
 import ListPerson from "./pages/ListPerson";
+import ListVehicle from "./pages/ListVehicle";
+import VehicleDetails from "./pages/VehicleDetails";
 
 const { Header, Content, Footer , Sider} = Layout;
 
@@ -45,18 +43,14 @@ class App extends Component {
                 <Link to="/" />
               </Menu.Item>
               <Menu.Item key="2">
-                <span>Kullanıcı Ekle</span>
-                <Link to="/person-details" />
-              </Menu.Item>
-              <Menu.Item key="3">
                 <span>Araç Ekle</span>
                 <Link to="/vehicle-details" />
               </Menu.Item>
-              <Menu.Item key="4">
+              <Menu.Item key="3">
                 <span>Kullanıcılar</span>
                 <Link to="/list-person" />
               </Menu.Item>
-              <Menu.Item key="5">
+              <Menu.Item key="4">
                 <span>Teklif Yarat</span>
                 <Link to="/create-offer" />
               </Menu.Item>
@@ -74,10 +68,8 @@ class App extends Component {
               }}
             >
               <Route path="/" component={Home} exact />
-              <Route path="/person-details" component={PersonDetails} />
               <Route path="/vehicle-details" component={VehicleDetails} />
               <Route path="/create-offer" component={CreateOffer} />
-              <Route path="/my-steps" component={MySteps} />
               <Route path="/list-vehicle/:tc" component={ListVehicle} />
               <Route path="/list-offers/:chassisNumber" component={ListOffers} />
               <Route path="/list-person/" component={ListPerson} />

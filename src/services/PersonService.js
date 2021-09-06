@@ -1,9 +1,6 @@
 import axios from "axios";
 
 const PersonService = (function () {
-    const headers = {
-        'Content-Type': 'application/json'
-    }
 
     const _createUser = async (credentials) => {
         const request = await axios.post("http://localhost:8080/person/",credentials)
