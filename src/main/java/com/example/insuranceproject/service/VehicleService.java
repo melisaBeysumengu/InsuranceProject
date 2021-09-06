@@ -17,8 +17,8 @@ public interface VehicleService {
 
     ResponseEntity<?> addOffer(String chassisNumber, Offer offer);
 
-    ResponseEntity<?> updateVehicle(Long id, Vehicle vehicle);
+    ResponseEntity<?> updateVehicle(Vehicle vehicle);
 
-    ResponseEntity<?> deleteVehicle(Long id);
+    ResponseEntity<?> deleteVehicle(String chassisNumber);
 
 }

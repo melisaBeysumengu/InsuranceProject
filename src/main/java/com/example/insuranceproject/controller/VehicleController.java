@@ -31,4 +31,9 @@ public class VehicleController {
         return vehicleService.addOffer(chassisNumber, offerService.getOfferById(offerId));
     }
 
+    @DeleteMapping("/{chassisNumber}")
+    public ResponseEntity<?> deleteVehicle(@PathVariable String chassisNumber) {
+        return vehicleService.deleteVehicle(chassisNumber);
+    }
+
 }

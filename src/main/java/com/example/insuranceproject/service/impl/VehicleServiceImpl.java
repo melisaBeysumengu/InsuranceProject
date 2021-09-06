@@ -50,12 +50,14 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<?> updateVehicle(Long id, Vehicle vehicle) {
-        return null;
+    public ResponseEntity<?> updateVehicle(Vehicle vehicle) {
+        vehicleRepository.save(vehicle);
+        return ResponseEntity.ok(new MessageResponse("Araç bilgileri başarıyla düzenlendi."));
     }
 
     @Override
-    public ResponseEntity<?> deleteVehicle(Long id) {
-        return null;
+    public ResponseEntity<?> deleteVehicle(String chassisNumber) {
+        vehicleRepository.deleteVehicleByChassisNumber(chassisNumber);
+        return ResponseEntity.ok(new MessageResponse("Araç başarıyla silindi."));
     }
 }

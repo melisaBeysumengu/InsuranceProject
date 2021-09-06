@@ -30,7 +30,7 @@ public class Person {
     @OneToMany
     private List<House> houses;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.REMOVE})
     private List<Vehicle> vehicles;
 
 }

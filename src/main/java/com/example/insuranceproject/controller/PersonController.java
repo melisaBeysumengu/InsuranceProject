@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class PersonController {
     @PutMapping("/")
     public ResponseEntity<?> updatePerson(@Valid @RequestBody Person person) {
         return personService.updatePerson(person);
+    }
+
+    @DeleteMapping("/{tcNumber}")
+    public ResponseEntity<?> deletePerson(@PathVariable("tcNumber") Integer tcNumber) {
+        return personService.deletePerson(tcNumber);
     }
 
     @PostMapping("/")

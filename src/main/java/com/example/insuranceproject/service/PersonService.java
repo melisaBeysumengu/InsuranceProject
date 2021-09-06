@@ -21,4 +21,6 @@ public interface PersonService {
 
     ResponseEntity<?> updatePerson(Person person);
 
+    ResponseEntity<?> deletePerson(Integer tcNumber);
+
 }
