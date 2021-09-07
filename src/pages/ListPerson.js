@@ -3,16 +3,22 @@ import axios from "axios";
 import React, { useEffect, useState } from 'react';
 import MaterialTable from 'material-table';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import { Button, Form } from "antd";
+import { useHistory } from "react-router-dom";
 
-const ListPerson = (props) => {
+const ListPerson = () => {
 
     const [person, setPerson] = useState([]);
+    const [selectedRow, setSelectedRow] = useState(false);
+    const [selectedPersonRow, setSelectedPersonRow] = useState();
 
     const [iserror, setIserror] = useState(false);
     const [errorMessages, setErrorMessages] = useState([]);
 
     const [isSuccesfull, setIsSuccesfull] = useState(false);
     const [successMessages, setSuccessMessages] = useState([]);
+
+    const history = useHistory();
 
     let columns = [
         { title: 'TC Kimlik Numarası', field: 'tcNumber', editable: 'onAdd' },
@@ -29,7 +35,6 @@ const ListPerson = (props) => {
                 setPerson(persons);
             })
     }, [])
-
 
     //function for updating the existing row details
     const handleRowUpdate = (newData, oldData, resolve) => {
@@ -67,16 +72,19 @@ const ListPerson = (props) => {
                 .catch(error => {
                     setErrorMessages(["Update failed! Server error"])
                     setIserror(true)
+                    setIsSuccesfull(false)
+                    setSuccessMessages([])
                     resolve()
 
                 })
         } else {
             setErrorMessages(errorList)
             setIserror(true)
+            setIsSuccesfull(false)
+            setSuccessMessages([])
             resolve()
         }
     }
-
 
     //function for deleting a row
     const handleRowDelete = (oldData, resolve) => {
@@ -93,10 +101,11 @@ const ListPerson = (props) => {
             .catch(error => {
                 setErrorMessages(["Delete failed! Server error"])
                 setIserror(true)
+                setIsSuccesfull(false)
+                setSuccessMessages([])
                 resolve()
             })
     }
-
 
     //function for adding a new row to the table
     const handleRowAdd = (newData, resolve) => {
@@ -134,14 +143,31 @@ const ListPerson = (props) => {
                 .catch(error => {
                     setErrorMessages(["Cannot add data. Server error!"])
                     setIserror(true)
+                    setIsSuccesfull(false)
+                    setSuccessMessages([])
                     resolve()
                 })
         } else {
             setErrorMessages(errorList)
             setIserror(true)
+            setIsSuccesfull(false)
+            setSuccessMessages([])
             resolve()
         }
     }
+
+    const onFinish = async () => {
+        if (selectedPersonRow !== null) {
+            history.push(`/list-vehicle/${selectedPersonRow}`)
+        }
+        else {
+            alert("Araçlardan birini seçmelisin.")
+        }
+    };
+
+    const onFinishFailed = (errorInfo) => {
+        console.log("Failed:", errorInfo);
+    };
 
 
     return (
@@ -178,8 +204,16 @@ const ListPerson = (props) => {
                 }}
                 options={{
                     headerStyle: { borderBottomColor: 'red', borderBottomWidth: '3px', fontFamily: 'verdana' },
-                    actionsColumnIndex: -1
+                    actionsColumnIndex: -1,
+                    rowStyle: rowData => ({
+                        backgroundColor: (selectedRow === rowData.tableData.id) ? '#7cabe1' : '#FFF'
+                    })
                 }}
+                onRowClick={((evt, selectedRow) => {
+                    setSelectedRow(selectedRow.tableData.id)
+                    setSelectedPersonRow(selectedRow.tcNumber)
+                    console.log(selectedRow.tcNumber)
+                })}
                 editable={{
                     onRowUpdate: (newData, oldData) =>
                         new Promise((resolve) => {
@@ -214,6 +248,35 @@ const ListPerson = (props) => {
                     </Alert>
                 }
             </div>
+            <Form
+                name="basic"
+                labelCol={{
+                    span: 8
+                }}
+                wrapperCol={{
+                    span: 16
+                }}
+                initialValues={{
+                    remember: true
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                style={{ margin: "0 auto", width: 400 }}
+            >
+                <Form.Item wrapperCol={{
+                    offset: 8,
+                    span: 16,
+                }}
+                    wrapperCol={{
+                        offset: 8,
+                        span: 16
+                    }}
+                >
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
         </div>
     );
 }

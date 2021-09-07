@@ -39,20 +39,12 @@ class App extends Component {
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
               <Menu.Item key="1">
-                <span>Teklif Al</span>
-                <Link to="/" />
-              </Menu.Item>
-              <Menu.Item key="2">
-                <span>Araç Ekle</span>
-                <Link to="/vehicle-details" />
-              </Menu.Item>
-              <Menu.Item key="3">
                 <span>Kullanıcılar</span>
                 <Link to="/list-person" />
               </Menu.Item>
-              <Menu.Item key="4">
+              <Menu.Item key="2">
                 <span>Teklif Yarat</span>
-                <Link to="/create-offer" />
+                <Link to="/create-baseOffer" />
               </Menu.Item>
             </Menu>
           </Sider>
@@ -69,7 +61,7 @@ class App extends Component {
             >
               <Route path="/" component={Home} exact />
               <Route path="/vehicle-details" component={VehicleDetails} />
-              <Route path="/create-offer" component={CreateOffer} />
+              <Route path="/create-baseOffer" component={CreateOffer} />
               <Route path="/list-vehicle/:tc" component={ListVehicle} />
               <Route path="/list-offers/:chassisNumber" component={ListOffers} />
               <Route path="/list-person/" component={ListPerson} />

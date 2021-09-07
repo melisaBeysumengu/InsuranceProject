@@ -30,12 +30,6 @@ const CreateOffer = () => {
         });
     };
 
-
-
-
-
-
-
     return (
         <div>
             <h1>Teklif Oluştur</h1>
@@ -113,6 +107,17 @@ const CreateOffer = () => {
                             onChange={handleChange}
                             name="category"
                             value={credentials.category}
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="İndirim"
+                        name="discount"
+                    >
+                        <Input
+                            onChange={handleChange}
+                            name="discount"
+                            value={credentials.discount}
                         />
                     </Form.Item>
 

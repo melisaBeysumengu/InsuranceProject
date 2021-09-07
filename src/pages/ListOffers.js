@@ -20,7 +20,7 @@ export default function ListOffers(props) {
     ]
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/offer/category/vehicle`)
+        axios.get(`http://localhost:8080/offer/category/vehicle/${props.match.params.chassisNumber}`)
             .then(res => {
                 const offers = res.data;
                 setOffer(offers);
