@@ -1,11 +1,9 @@
 package com.example.insuranceproject.controller;
 
-import com.example.insuranceproject.model.Offer;
+import com.example.insuranceproject.model.BaseOffer;
 import com.example.insuranceproject.service.OfferService;
 import com.example.insuranceproject.service.VehicleService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -22,7 +20,7 @@ public class VehicleController {
     //private static final Logger logger = LoggerFactory.getLogger(VehicleController.class);
 
     @GetMapping("/{chassisNumber}")
-    public List<Offer> getAllOffers(@PathVariable String chassisNumber) {
+    public List<BaseOffer> getAllOffers(@PathVariable String chassisNumber) {
         return vehicleService.getAllOffers(chassisNumber);
     }
 

@@ -1,6 +1,7 @@
 package com.example.insuranceproject.service.impl;
 
-import com.example.insuranceproject.model.Offer;
+import com.example.insuranceproject.model.BaseOffer;
+import com.example.insuranceproject.model.CarInsurance;
 import com.example.insuranceproject.repository.OfferRepository;
 import com.example.insuranceproject.service.OfferService;
 import lombok.RequiredArgsConstructor;
@@ -18,23 +19,28 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
 
     @Override
-    public List<Offer> getOffersByCategory(String category) {
-        return offerRepository.findAllByCategory(category);
+    public List<BaseOffer> getOffersByCategory(String category, Integer age, Integer kilometer) {
+        List<BaseOffer> baseOfferList = offerRepository.findAllByCategory(category);
+        for (BaseOffer baseOffer :
+                baseOfferList) {
+            ((CarInsurance) baseOffer).setPrice(baseOffer.getPrice(), age, kilometer);
+        }
+        return baseOfferList;
     }
 
     @Override
-    public List<Offer> getAll() {
+    public List<BaseOffer> getAll() {
         return offerRepository.findAll();
     }
 
     @Override
-    public Offer getOfferById(Long id) {
+    public BaseOffer getOfferById(Long id) {
         return offerRepository.findOfferById(id);
     }
 
     @Override
-    public Offer createNewOffer(Offer offer) {
-        Objects.requireNonNull(offer.getTitle(), "Title cannot be null");
-        return offerRepository.save(offer);
+    public BaseOffer createNewOffer(BaseOffer baseOffer) {
+        Objects.requireNonNull(baseOffer.getTitle(), "Title cannot be null");
+        return offerRepository.save(baseOffer);
     }
 }

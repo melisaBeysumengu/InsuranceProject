@@ -19,6 +19,7 @@ public class Person {
     @Column(name = "tc_number", nullable = false)
     private Integer tcNumber;
 
+    @NotBlank(message = "İsim boş bırakılamaz!")
     private String name;
 
     private String surname;
@@ -26,6 +27,8 @@ public class Person {
     private String address;
 
     private double income;
+
+    private Integer licenceYear;
 
     @OneToMany
     private List<House> houses;

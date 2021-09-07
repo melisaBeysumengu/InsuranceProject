@@ -1,18 +1,19 @@
 package com.example.insuranceproject.service.impl;
 
 import com.example.insuranceproject.dto.MessageResponse;
-import com.example.insuranceproject.model.Offer;
+import com.example.insuranceproject.model.BaseOffer;
+import com.example.insuranceproject.model.CarInsurance;
 import com.example.insuranceproject.model.Vehicle;
+import com.example.insuranceproject.repository.CarInsuranceRepository;
+import com.example.insuranceproject.repository.OfferRepository;
 import com.example.insuranceproject.repository.VehicleRepository;
 import com.example.insuranceproject.service.VehicleService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Slf4j
@@ -20,6 +21,8 @@ import java.util.Optional;
 public class VehicleServiceImpl implements VehicleService {
 
     VehicleRepository vehicleRepository;
+    OfferRepository offerRepository;
+    CarInsuranceRepository carInsuranceRepository;
 
     @Override
     public Vehicle findVehicleByChassisNumber(String chassisNumber) {
@@ -32,17 +35,26 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Offer> getAllOffers(String chassisNumber) {
-        return vehicleRepository.findVehicleByChassisNumber(chassisNumber).getPolicies();
+    public List<BaseOffer> getAllOffers(String chassisNumber) {
+        return vehicleRepository
+                .findVehicleByChassisNumber(chassisNumber)
+                .getPolicies();
     }
 
     @Override
-    public ResponseEntity<?> addOffer(String chassisNumber, Offer offer) {
+    public ResponseEntity<?> addOffer(String chassisNumber, BaseOffer baseOffer) {
         Vehicle v = vehicleRepository.findVehicleByChassisNumber(chassisNumber);
-        if(v.getPolicies().contains(offer)){
+        CarInsurance c = (CarInsurance) baseOffer;
+        c.setPrice(baseOffer.getPrice(), v.getAge(), v.getKilometer());
+        if (v
+                .getPolicies()
+                .contains(c)) {
             return ResponseEntity.ok(new MessageResponse("Bu sigortaya sahip!"));
-        }else{
-            v.getPolicies().add(offer);
+        } else {
+            carInsuranceRepository.save(c);
+            v
+                    .getPolicies()
+                    .add(c);
             vehicleRepository.save(v);
         }
 

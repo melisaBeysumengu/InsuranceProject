@@ -74,6 +74,7 @@ public class PersonServiceImpl implements PersonService {
                 .name(person.getName()!=null ? person.getName() : p.getName())
                 .surname(person.getSurname()!=null ? person.getSurname() : p.getSurname())
                 .address(person.getAddress()!=null ? person.getAddress() : p.getAddress())
+                .licenceYear(person.getLicenceYear()!=null ? person.getLicenceYear() : p.getLicenceYear())
                 .income(person.getIncome())
                 .vehicles(p.getVehicles())
                 .houses(p.getHouses())

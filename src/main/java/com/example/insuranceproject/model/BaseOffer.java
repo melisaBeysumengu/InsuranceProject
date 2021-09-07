@@ -10,15 +10,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Offer {
+public class BaseOffer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
-    @Column(length = 5000)
+    @Lob
     private String content;
+
+    private Integer discount;
 
     private double price;
 

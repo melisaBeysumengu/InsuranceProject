@@ -1,20 +1,20 @@
 package com.example.insuranceproject.repository;
 
-import com.example.insuranceproject.model.Offer;
+import com.example.insuranceproject.model.BaseOffer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface OfferRepository extends JpaRepository<Offer, Long> {
+public interface OfferRepository extends JpaRepository<BaseOffer, Long> {
 
-    List<Offer> findAllByCategory(String category);
+    List<BaseOffer> findAllByCategory(String category);
 
-    Offer findOfferById(Long id);
+    BaseOffer findOfferById(Long id);
 
     @Override
-    List<Offer> findAll();
+    List<BaseOffer> findAll();
 
-    Offer save(Offer offer);
+    BaseOffer save(BaseOffer baseOffer);
 }

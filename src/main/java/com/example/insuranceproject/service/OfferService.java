@@ -1,17 +1,17 @@
 package com.example.insuranceproject.service;
 
-import com.example.insuranceproject.model.Offer;
+import com.example.insuranceproject.model.BaseOffer;
 
 import java.util.List;
 
 public interface OfferService {
 
-    List<Offer> getOffersByCategory(String category);
+    List<BaseOffer> getOffersByCategory(String category, Integer age, Integer kilometer);
 
-    List<Offer> getAll();
+    List<BaseOffer> getAll();
 
-    Offer getOfferById(Long id);
+    BaseOffer getOfferById(Long id);
 
-    Offer createNewOffer(Offer offer);
+    BaseOffer createNewOffer(BaseOffer baseOffer);
 
 }
