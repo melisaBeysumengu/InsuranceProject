@@ -1,6 +1,6 @@
 package com.example.insuranceproject.controller;
 
-import com.example.insuranceproject.model.BaseOffer;
+import com.example.insuranceproject.model.Kasko;
 import com.example.insuranceproject.service.OfferService;
 import com.example.insuranceproject.service.VehicleService;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class VehicleController {
     //private static final Logger logger = LoggerFactory.getLogger(VehicleController.class);
 
     @GetMapping("/{chassisNumber}")
-    public List<BaseOffer> getAllOffers(@PathVariable String chassisNumber) {
+    public List<Kasko> getAllOffers(@PathVariable String chassisNumber) {
         return vehicleService.getAllOffers(chassisNumber);
     }
 

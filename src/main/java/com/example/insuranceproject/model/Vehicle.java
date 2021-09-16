@@ -30,7 +30,7 @@ public class Vehicle {
     private Integer kilometer;
 
     @OneToMany
-    private List<BaseOffer> policies = new ArrayList<>();
+    private List<Kasko> policies = new ArrayList<>();
 
 
 }

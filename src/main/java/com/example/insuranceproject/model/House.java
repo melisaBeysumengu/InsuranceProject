@@ -26,6 +26,6 @@ public class House {
     private Double value;
 
     @OneToMany
-    private List<BaseOffer> policies = new ArrayList<>();
+    private List<Kasko> policies = new ArrayList<>();
 
 }

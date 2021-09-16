@@ -1,29 +1,45 @@
 package com.example.insuranceproject.model;
 
 import lombok.*;
-import org.springframework.context.annotation.Scope;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-public class CarInsurance extends BaseOffer {
+public class CarInsurance{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Integer ageLimit;
+    @OneToOne
+    private Kasko kasko;
 
-    private Integer kilometerLimit;
+    /*@Builder
+    public CarInsurance(BaseOffer baseOffer) {
+        super(baseOffer.getId(), baseOffer.getTitle(), baseOffer.getContent(), baseOffer.getDiscount(),
+                baseOffer.getPrice(), baseOffer.getProvider(), baseOffer.getCategory());
+    }*/
 
     public void setPrice(double price, int age, int kilometer) {
-        if(age < ageLimit){
-            setPrice(price*((double) (100-getDiscount())/100));
+        String content = "";
+        if (age < kasko.getAgeLimit()) {
+            kasko.setPrice(price * ((double) (100 - kasko.getDiscount()) / 100));
+            content = "Araç yaşınız küçük olduğu için orijinal fiyat (" + price + ") üzerinden %" + kasko.getDiscount() + " indirim uygulandı.";
         }
-        if(kilometer < kilometerLimit){
-            setPrice(getPrice()*((double) (100-getDiscount())/100));
+        if (kilometer < kasko.getKilometerLimit()) {
+            content += " Araç kilometresi küçük olduğu için fiyat (" + kasko.getPrice() + ") üzerinden %" + kasko.getDiscount() + " indirim uygulandı.";
+            kasko.setPrice(kasko.getPrice() * ((double) (100 - kasko.getDiscount()) / 100));
+        }
+
+        if (price == kasko.getPrice()) {
+            kasko.setContent("Bu sigortaya indirim uygulanmadı.");
+        } else {
+            kasko.setContent(content);
         }
     }
-
 }

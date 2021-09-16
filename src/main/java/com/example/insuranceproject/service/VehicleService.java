@@ -1,6 +1,6 @@
 package com.example.insuranceproject.service;
 
-import com.example.insuranceproject.model.BaseOffer;
+import com.example.insuranceproject.model.Kasko;
 import com.example.insuranceproject.model.Vehicle;
 import org.springframework.http.ResponseEntity;
 
@@ -12,9 +12,9 @@ public interface VehicleService {
 
     Vehicle createNewVehicle(Vehicle vehicle);
 
-    List<BaseOffer> getAllOffers(String chassisNumber);
+    List<Kasko> getAllOffers(String chassisNumber);
 
-    ResponseEntity<?> addOffer(String chassisNumber, BaseOffer baseOffer);
+    ResponseEntity<?> addOffer(String chassisNumber, Kasko kasko);
 
     ResponseEntity<?> updateVehicle(Vehicle vehicle);
 
