@@ -44,7 +44,7 @@ class App extends Component {
               </Menu.Item>
               <Menu.Item key="2">
                 <span>Teklif Yarat</span>
-                <Link to="/create-baseOffer" />
+                <Link to="/create-kasko" />
               </Menu.Item>
             </Menu>
           </Sider>
@@ -61,7 +61,7 @@ class App extends Component {
             >
               <Route path="/" component={Home} exact />
               <Route path="/vehicle-details" component={VehicleDetails} />
-              <Route path="/create-baseOffer" component={CreateOffer} />
+              <Route path="/create-kasko" component={CreateOffer} />
               <Route path="/list-vehicle/:tc" component={ListVehicle} />
               <Route path="/list-offers/:chassisNumber" component={ListOffers} />
               <Route path="/list-person/" component={ListPerson} />

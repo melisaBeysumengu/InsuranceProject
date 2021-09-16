@@ -24,6 +24,7 @@ const ListPerson = () => {
         { title: 'TC Kimlik Numarası', field: 'tcNumber', editable: 'onAdd' },
         { title: 'Ad', field: 'name' },
         { title: 'Soyad', field: 'surname' },
+        { title: 'Sürüş Deneyimi ', field: 'licenceYear' },
         { title: 'Adres', field: 'address' },
         { title: 'Gelir', field: 'income' }
     ]
@@ -70,7 +71,7 @@ const ListPerson = () => {
                     setSuccessMessages([response.data.message])
                 })
                 .catch(error => {
-                    setErrorMessages(["Update failed! Server error"])
+                    setErrorMessages(["Güncelleme başarısız. Sunucuda sorun var!"])
                     setIserror(true)
                     setIsSuccesfull(false)
                     setSuccessMessages([])
@@ -99,7 +100,7 @@ const ListPerson = () => {
                 setSuccessMessages([response.data.message])
             })
             .catch(error => {
-                setErrorMessages(["Delete failed! Server error"])
+                setErrorMessages(["Silme başarısız. Sunucuda sorun var!"])
                 setIserror(true)
                 setIsSuccesfull(false)
                 setSuccessMessages([])
@@ -141,7 +142,7 @@ const ListPerson = () => {
                     setSuccessMessages([response.data.message])
                 })
                 .catch(error => {
-                    setErrorMessages(["Cannot add data. Server error!"])
+                    setErrorMessages(["Ekleme başarısız. Sunucuda sorun var!"])
                     setIserror(true)
                     setIsSuccesfull(false)
                     setSuccessMessages([])

@@ -11,6 +11,9 @@ export default function ListOffers(props) {
     const [offer, setOffer] = useState([]);
     const [presentOffer, setPresentOffer] = useState([]);
     const [select, setSelect] = useState([]);
+    const [selectedRow, setSelectedRow] = useState(false);
+
+    const tableRef = React.createRef();
 
     let columns = [
         { title: 'İsim', field: 'title' },
@@ -35,7 +38,7 @@ export default function ListOffers(props) {
     }, [])
 
     const onFinish = async () => {
-        console.log("on finish: ",select)
+        console.log("on finish: ", select)
         console.log(`http://localhost:8080/vehicle/${props.match.params.chassisNumber}/${select}`)
         const request = await axios.put(`http://localhost:8080/vehicle/${props.match.params.chassisNumber}/${select}`)
             .then((response) => { console.log(response.data) })
@@ -52,11 +55,20 @@ export default function ListOffers(props) {
                 title="Kabul Edilen Teklif Bilgileri"
                 columns={columns}
                 data={presentOffer}
+                tableRef={tableRef}
                 options={{
                     headerStyle: { borderBottomColor: 'red', borderBottomWidth: '3px', fontFamily: 'verdana' },
                     actionsColumnIndex: -1,
                     search: false,
                 }}
+                actions={[
+                    {
+                        icon: 'refresh',
+                        tooltip: 'Refresh Data',
+                        isFreeAction: true,
+                        onClick: () => tableRef.current && tableRef.current.onQueryChange(),
+                    }
+                ]}
             />
 
 
@@ -68,14 +80,15 @@ export default function ListOffers(props) {
                     headerStyle: { borderBottomColor: 'red', borderBottomWidth: '3px', fontFamily: 'verdana' },
                     actionsColumnIndex: -1,
                     search: false,
-                    selection: true
+                    rowStyle: rowData => ({
+                        backgroundColor: (selectedRow === rowData.tableData.id) ? '#7cabe1' : '#FFF'
+                    })
                 }}
-                onSelectionChange={(data, rowData) => {
-                    if (rowData.tableData.checked) {
-                        setSelect(rowData.id)
-                        console.log("on selection change: ",rowData.id)
-                    }
-                }}
+                onRowClick={((evt, selectedRow) => {
+                    setSelectedRow(selectedRow.tableData.id)
+                    setSelect(selectedRow.id)
+                    console.log(selectedRow)
+                })}
             />
 
             <Form
