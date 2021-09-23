@@ -37,7 +37,7 @@ const ListVehicle = (props) => {
 
     const onFinish = async (values) => {
         if (select !== null) {
-            history.push(`/list-offers/${select}`)
+            history.push(`/list-details/${select}`)
         }
         else {
             alert("Araçlardan birini seçmelisin.")
@@ -163,7 +163,7 @@ const ListVehicle = (props) => {
                     }}
                 >
                     <Button type="primary" htmlType="submit">
-                        Teklifleri Gör
+                        Teklifleri Al
                     </Button>
                 </Form.Item>
 

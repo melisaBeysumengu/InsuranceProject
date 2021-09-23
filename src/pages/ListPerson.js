@@ -6,7 +6,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { Button, Form } from "antd";
 import { useHistory } from "react-router-dom";
 
-const ListPerson = () => {
+const ListPerson = (props) => {
 
     const [person, setPerson] = useState([]);
     const [selectedRow, setSelectedRow] = useState(false);
@@ -157,9 +157,11 @@ const ListPerson = () => {
         }
     }
 
-    const onFinish = async () => {
+    const onFinish = () => {
         if (selectedPersonRow !== null) {
-            history.push(`/list-vehicle/${selectedPersonRow}`)
+            if (props.match.params.type === "vehicle") {
+                history.push(`/list-vehicle/${selectedPersonRow}`)
+            }
         }
         else {
             alert("Araçlardan birini seçmelisin.")
@@ -274,7 +276,7 @@ const ListPerson = () => {
                     }}
                 >
                     <Button type="primary" htmlType="submit">
-                        Submit
+                        Devam
                     </Button>
                 </Form.Item>
             </Form>

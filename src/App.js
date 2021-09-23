@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import "../src/styles.css";
 import CreateOffer from "./pages/CreateOffer";
 import Home from "./pages/Home";
+import LastResult from "./pages/LastResult";
 import ListOffers from "./pages/ListOffers";
 import ListPerson from "./pages/ListPerson";
 import ListVehicle from "./pages/ListVehicle";
@@ -39,18 +40,12 @@ class App extends Component {
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
               <Menu.Item key="1">
-                <span>Kullanıcılar</span>
-                <Link to="/list-person" />
-              </Menu.Item>
-              <Menu.Item key="2">
-                <span>Teklif Yarat</span>
-                <Link to="/create-kasko" />
+                <span>Teklifler</span>
+                <Link to="/" />
               </Menu.Item>
             </Menu>
           </Sider>
           <Layout>
-            {/* <Header style={{ background: "#fff", padding: 0, paddingLeft: 16 }}>HEADER
-            </Header> */}
             <Content
               style={{
                 margin: "24px 16px",
@@ -59,12 +54,12 @@ class App extends Component {
                 minHeight: 280
               }}
             >
-              <Route path="/" component={Home} exact />
+              <Route path="/" component={CreateOffer} exact />
               <Route path="/vehicle-details" component={VehicleDetails} />
-              <Route path="/create-kasko" component={CreateOffer} />
               <Route path="/list-vehicle/:tc" component={ListVehicle} />
-              <Route path="/list-offers/:chassisNumber" component={ListOffers} />
-              <Route path="/list-person/" component={ListPerson} />
+              <Route path="/list-details/:chassisNumber" component={ListOffers} />
+              <Route path="/list-person/:type" component={ListPerson} />
+              <Route path="/last-result/" component={LastResult} />
             </Content>
           </Layout>
         </Layout>
