@@ -1,7 +1,6 @@
 package com.example.insuranceproject.service.impl;
 
 import com.example.insuranceproject.model.Kasko;
-import com.example.insuranceproject.model.CarInsurance;
 import com.example.insuranceproject.repository.OfferRepository;
 import com.example.insuranceproject.service.OfferService;
 import lombok.AllArgsConstructor;
@@ -18,19 +17,23 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
 
     @Override
-    public List<Kasko> getOffersByCategory(String category, Integer age, Integer kilometer) {
-        List<Kasko> kaskoList = offerRepository.findAllByCategory(category);
-        List<Kasko> newList = new ArrayList<>();
-        for (Kasko kasko :
-                kaskoList) {
-            if(kasko
-                    .getContent().equals("Orijinal ücret.")){
-                CarInsurance c = CarInsurance.builder().kasko(kasko).build();
-                c.setPrice(kasko.getPrice(), age, kilometer);
-                newList.add(c.getKasko());
-            }
-        }
-        return newList;
+    public Kasko getOffersByCategory(String category, Integer age, Integer kilometer) {
+        Kasko kasko = offerRepository.findKaskoByContent("Orijinal ücret.");
+        System.out.println(offerRepository.findKaskoByContent("Orijinal ücret."));
+        Kasko newKasko = Kasko
+                .builder()
+                .category(kasko.getCategory())
+                .ageLimit(kasko.getAgeLimit())
+                .content(kasko.getContent())
+                .discount(kasko.getDiscount())
+                .driverExperienceLimit(kasko.getDriverExperienceLimit())
+                .price(kasko.getPrice())
+                .provider(kasko.getProvider())
+                .title(kasko.getTitle())
+                .kilometerLimit(kasko.getKilometerLimit())
+                .build();
+        newKasko.setPrice(kasko.getPrice(), age, kilometer);
+        return kasko;
     }
 
     @Override
@@ -39,8 +42,9 @@ public class OfferServiceImpl implements OfferService {
         List<Kasko> newList = new ArrayList<>();
         for (Kasko kasko :
                 kaskoList) {
-            if(kasko
-                    .getContent().equals("Orijinal ücret.")){
+            if (kasko
+                    .getContent()
+                    .equals("Orijinal ücret.")) {
                 newList.add(kasko);
             }
         }

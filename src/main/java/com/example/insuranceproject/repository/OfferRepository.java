@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface OfferRepository extends JpaRepository<Kasko, Long> {
 
-    List<Kasko> findAllByCategory(String category);
+    Kasko findKaskoByContent(String content);
 
     Kasko findOfferById(Long id);
 

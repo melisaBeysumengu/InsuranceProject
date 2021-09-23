@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface OfferService {
 
-    List<Kasko> getOffersByCategory(String category, Integer age, Integer kilometer);
+    Kasko getOffersByCategory(String category, Integer age, Integer kilometer);
 
     List<Kasko> getAll();
 

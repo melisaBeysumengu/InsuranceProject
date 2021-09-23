@@ -1,10 +1,13 @@
 package com.example.insuranceproject.repository;
 
+import com.example.insuranceproject.model.Person;
 import com.example.insuranceproject.model.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
@@ -13,5 +16,4 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     @Transactional
     void deleteVehicleByChassisNumber(String chassisNumber);
-
 }

@@ -1,5 +1,6 @@
 package com.example.insuranceproject.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,7 +26,12 @@ public class House {
 
     private Double value;
 
-    @OneToMany
-    private List<Kasko> policies = new ArrayList<>();
+    @OneToOne
+    private Dask dask;
+
+    @ManyToOne
+    @JoinColumn(name="owner_tc_number")
+    @JsonBackReference
+    private Person owner;
 
 }

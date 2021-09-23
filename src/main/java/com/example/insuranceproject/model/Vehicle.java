@@ -1,5 +1,6 @@
 package com.example.insuranceproject.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -17,10 +19,8 @@ import java.util.List;
 public class Vehicle {
     @Id
     @NotBlank
-    @Column(length = 17)
     private String chassisNumber;
 
-    @Size(max = 7)
     private String plateNumber;
 
     private String color;
@@ -29,8 +29,13 @@ public class Vehicle {
 
     private Integer kilometer;
 
-    @OneToMany
-    private List<Kasko> policies = new ArrayList<>();
+    @OneToOne
+    private Kasko kasko;
+
+    @ManyToOne
+    @JoinColumn(name="owner_tc_number")
+    @JsonBackReference
+    private Person owner;
 
 
 }

@@ -22,7 +22,7 @@ public class OfferController {
     public List<Kasko> getAll(){return offerService.getAll();}
 
     @GetMapping("/category/{category}/{chassisNumber}")
-    public List<Kasko> getOffersByCategory(@PathVariable("category") String category,
+    public Kasko getOffersByCategory(@PathVariable("category") String category,
                                            @PathVariable String chassisNumber){
         Vehicle v = vehicleService.findVehicleByChassisNumber(chassisNumber);
         return offerService.getOffersByCategory(category, v.getAge(), v.getKilometer());

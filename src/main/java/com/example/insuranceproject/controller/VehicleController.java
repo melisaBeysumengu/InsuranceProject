@@ -1,7 +1,10 @@
 package com.example.insuranceproject.controller;
 
 import com.example.insuranceproject.model.Kasko;
+import com.example.insuranceproject.model.Person;
+import com.example.insuranceproject.model.Vehicle;
 import com.example.insuranceproject.service.OfferService;
+import com.example.insuranceproject.service.PersonService;
 import com.example.insuranceproject.service.VehicleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +20,24 @@ public class VehicleController {
 
     OfferService offerService;
 
+    PersonService personService;
+
     //private static final Logger logger = LoggerFactory.getLogger(VehicleController.class);
 
-    @GetMapping("/{chassisNumber}")
-    public List<Kasko> getAllOffers(@PathVariable String chassisNumber) {
+    @GetMapping("/offers/{chassisNumber}")
+    public Kasko getAllOffers(@PathVariable String chassisNumber) {
         return vehicleService.getAllOffers(chassisNumber);
+    }
+
+    @GetMapping("/{chassisNumber}")
+    public Vehicle getVehicle(@PathVariable String chassisNumber) {
+        return vehicleService.findVehicleByChassisNumber(chassisNumber);
+    }
+
+    @GetMapping("/owner/{chassisNumber}")
+    public Person getVehicleOwner(@PathVariable String chassisNumber) {
+        return vehicleService.findOwnerByChassisNumber(chassisNumber);
+        //return personService.findVehicleByChassisNumber(chassisNumber);
     }
 
     @PutMapping("/{chassisNumber}/{offerId}")

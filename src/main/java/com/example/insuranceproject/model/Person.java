@@ -1,5 +1,6 @@
 package com.example.insuranceproject.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@ToString
 public class Person {
 
     @Id
@@ -30,10 +32,12 @@ public class Person {
 
     private Integer licenceYear;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "owner")
+    @JsonManagedReference
     private List<House> houses;
 
-    @OneToMany(cascade = {CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "owner")
+    @JsonManagedReference
     private List<Vehicle> vehicles;
 
 }

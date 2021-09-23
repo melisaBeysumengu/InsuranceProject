@@ -6,7 +6,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class MessageResponse {
     private String message;
+    private Object content;
+
+    public MessageResponse(String message) {
+        this.message = message;
+    }
+
+    public MessageResponse(String message, Object content) {
+        this.message = message;
+        this.content = content;
+    }
 }

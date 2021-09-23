@@ -23,4 +23,6 @@ public interface PersonService {
 
     ResponseEntity<?> deletePerson(Integer tcNumber);
 
+    Person findVehicleByChassisNumber(String chassisNumber);
+
 }

@@ -2,17 +2,19 @@ package com.example.insuranceproject.service.impl;
 
 import com.example.insuranceproject.dto.MessageResponse;
 import com.example.insuranceproject.model.Kasko;
-import com.example.insuranceproject.model.CarInsurance;
+import com.example.insuranceproject.model.Person;
 import com.example.insuranceproject.model.Vehicle;
-import com.example.insuranceproject.repository.CarInsuranceRepository;
 import com.example.insuranceproject.repository.OfferRepository;
+import com.example.insuranceproject.repository.PersonRepository;
 import com.example.insuranceproject.repository.VehicleRepository;
 import com.example.insuranceproject.service.VehicleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @AllArgsConstructor
 @Service
@@ -20,7 +22,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     VehicleRepository vehicleRepository;
     OfferRepository offerRepository;
-    CarInsuranceRepository carInsuranceRepository;
+    PersonRepository personRepository;
 
     @Override
     public Vehicle findVehicleByChassisNumber(String chassisNumber) {
@@ -28,15 +30,15 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Vehicle createNewVehicle(Vehicle vehicle) {
-        return vehicleRepository.save(vehicle);
+    public void createNewVehicle(Vehicle vehicle) {
+        vehicleRepository.save(vehicle);
     }
 
     @Override
-    public List<Kasko> getAllOffers(String chassisNumber) {
+    public Kasko getAllOffers(String chassisNumber) {
         return vehicleRepository
                 .findVehicleByChassisNumber(chassisNumber)
-                .getPolicies();
+                .getKasko();
     }
 
     @Override
@@ -44,9 +46,8 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle v = vehicleRepository.findVehicleByChassisNumber(chassisNumber);
 
         if (v
-                .getPolicies()
-                .contains(kasko)) {
-            return ResponseEntity.ok(new MessageResponse("Bu sigortaya sahip!"));
+                .getKasko() != null) {
+            return ResponseEntity.ok(new MessageResponse("Bu sigortaya sahip!", v.getKasko()));
         } else {
             System.out.println(kasko.getPrice());
             Kasko original = offerRepository.findOfferById(kasko.getId());
@@ -62,42 +63,17 @@ public class VehicleServiceImpl implements VehicleService {
                     .driverExperienceLimit(kasko.getDriverExperienceLimit())
                     .kilometerLimit(kasko.getKilometerLimit())
                     .build();
-            CarInsurance b = CarInsurance
-                    .builder()
-                    .kasko(kasko1)
-                    .build();
-            b.setPrice(kasko.getPrice(), v.getAge(), v.getKilometer());
 
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            kasko1.setCreatedAt(dtf.format(now));
             offerRepository.save(kasko1);
-            /*BaseOffer original = offerRepository.findOfferById(baseOffer.getId());
-            CarInsurance c = CarInsurance
-                    .builder()
-                    .baseOffer(baseOffer)
-                    .build();
-            c.setPrice(baseOffer.getPrice(), v.getAge(), v.getKilometer());*/
-            //offerRepository.save(b.getBaseOffer());
-            /*CarInsurance c = (CarInsurance) baseOffer;
-            CarInsurance newC = CarInsurance.builder().baseOffer(baseOffer).build();
-            newC.setAgeLimit(c.getAgeLimit());
-            newC.setKilometerLimit(c.getKilometerLimit());*/
-
-                    /*.builder()
-                    .ageLimit(c.getAgeLimit())
-                    .kilometerLimit(c.getKilometerLimit())
-                    .build();
-            newC.setPrice(baseOffer.getPrice(), v.getAge(), v.getKilometer());
-            b.setPrice(newC.getPrice());
-            b.setContent(newC.getContent());*/
-            //c.setPrice(baseOffer.getPrice(), v.getAge(), v.getKilometer());
-            //c.setId(offerRepository.count() + 1);
-            //offerRepository.save(b);
+            kasko1.setPrice(original.getPrice(), v.getAge(), v.getKilometer());
             v
-                    .getPolicies()
-                    .add(kasko1);
+                    .setKasko(kasko1);
             vehicleRepository.save(v);
+            return ResponseEntity.ok(new MessageResponse("Teklif başarıyla kaydedildi.", kasko1));
         }
-
-        return ResponseEntity.ok(new MessageResponse("Teklif başarıyla kaydedildi."));
     }
 
     @Override
@@ -110,5 +86,12 @@ public class VehicleServiceImpl implements VehicleService {
     public ResponseEntity<?> deleteVehicle(String chassisNumber) {
         vehicleRepository.deleteVehicleByChassisNumber(chassisNumber);
         return ResponseEntity.ok(new MessageResponse("Araç başarıyla silindi."));
+    }
+
+    @Override
+    public Person findOwnerByChassisNumber(String chassisNumber) {
+        return vehicleRepository
+                .findVehicleByChassisNumber(chassisNumber)
+                .getOwner();
     }
 }

@@ -6,9 +6,12 @@ import com.example.insuranceproject.model.House;
 import com.example.insuranceproject.model.Person;
 import com.example.insuranceproject.model.Vehicle;
 import com.example.insuranceproject.repository.PersonRepository;
+import com.example.insuranceproject.repository.VehicleRepository;
 import com.example.insuranceproject.service.PersonService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,11 +21,13 @@ import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-@Slf4j
 @Service
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
+
+    private final VehicleRepository vehicleRepository;
+
 
     @Override
     public ResponseEntity<?> createNewPerson(Person person) {
@@ -45,6 +50,8 @@ public class PersonServiceImpl implements PersonService {
     public ResponseEntity<?> addVehicle(Integer tcNumber, Vehicle vehicle) {
 
         Person p = personRepository.findPersonByTcNumber(tcNumber).get();
+        vehicle.setOwner(p);
+        vehicleRepository.save(vehicle);
         p
                 .getVehicles()
                 .add(vehicle);
@@ -89,5 +96,22 @@ public class PersonServiceImpl implements PersonService {
             personRepository.deleteByTcNumber(tcNumber);
             return ResponseEntity.ok(new MessageResponse("Kullanıcı başarıyla silindi."));
         }else return ResponseEntity.ok(new MessageResponse("Kullanıcı sistemde bulunamadı."));
+    }
+
+    @Override
+    public Person findVehicleByChassisNumber(String chassisNumber) {
+        Person p = new Person();
+        for (Person person :
+                personRepository.findAll()) {
+            for (Vehicle vehicle :
+                    person.getVehicles()) {
+                if(vehicle.getChassisNumber().equals(chassisNumber)){
+                    p = person;
+                }
+            }
+        }
+        if(p.getTcNumber()==null){
+            throw new MyNotFoundException();
+        }else return p;
     }
 }
