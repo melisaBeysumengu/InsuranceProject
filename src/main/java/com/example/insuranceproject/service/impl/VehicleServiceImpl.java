@@ -1,10 +1,10 @@
 package com.example.insuranceproject.service.impl;
 
-import com.example.insuranceproject.dto.MessageResponse;
+import com.example.insuranceproject.dto.MessageResponseDTO;
 import com.example.insuranceproject.model.Kasko;
 import com.example.insuranceproject.model.Person;
 import com.example.insuranceproject.model.Vehicle;
-import com.example.insuranceproject.repository.OfferRepository;
+import com.example.insuranceproject.repository.KaskoRepository;
 import com.example.insuranceproject.repository.PersonRepository;
 import com.example.insuranceproject.repository.VehicleRepository;
 import com.example.insuranceproject.service.VehicleService;
@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 public class VehicleServiceImpl implements VehicleService {
 
     VehicleRepository vehicleRepository;
-    OfferRepository offerRepository;
+    KaskoRepository kaskoRepository;
     PersonRepository personRepository;
 
     @Override
@@ -47,10 +47,11 @@ public class VehicleServiceImpl implements VehicleService {
 
         if (v
                 .getKasko() != null) {
-            return ResponseEntity.ok(new MessageResponse("Bu sigortaya sahip!", v.getKasko()));
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponseDTO("Bu sigortaya sahip!", v.getKasko()));
         } else {
-            System.out.println(kasko.getPrice());
-            Kasko original = offerRepository.findOfferById(kasko.getId());
+            Kasko original = kaskoRepository.findOfferById(kasko.getId());
             Kasko kasko1 = Kasko
                     .builder()
                     .content(kasko.getContent())
@@ -62,30 +63,44 @@ public class VehicleServiceImpl implements VehicleService {
                     .ageLimit(kasko.getAgeLimit())
                     .driverExperienceLimit(kasko.getDriverExperienceLimit())
                     .kilometerLimit(kasko.getKilometerLimit())
+                    .vehicle(v)
                     .build();
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             kasko1.setCreatedAt(dtf.format(now));
-            offerRepository.save(kasko1);
+
+            kaskoRepository.save(kasko1);
             kasko1.setPrice(original.getPrice(), v.getAge(), v.getKilometer());
             v
                     .setKasko(kasko1);
             vehicleRepository.save(v);
-            return ResponseEntity.ok(new MessageResponse("Teklif başarıyla kaydedildi.", kasko1));
+            return ResponseEntity.ok(new MessageResponseDTO("Teklif başarıyla kaydedildi.", kasko1));
         }
     }
 
     @Override
     public ResponseEntity<?> updateVehicle(Vehicle vehicle) {
-        vehicleRepository.save(vehicle);
-        return ResponseEntity.ok(new MessageResponse("Araç bilgileri başarıyla düzenlendi."));
+        Vehicle vehicle1 = vehicleRepository.findVehicleByChassisNumber(vehicle.getChassisNumber());
+        Vehicle newVehicle = Vehicle
+                .builder()
+                .chassisNumber(vehicle.getChassisNumber())
+                .plateNumber(
+                        vehicle.getPlateNumber() == null ? vehicle1.getPlateNumber() : vehicle.getPlateNumber())
+                .age(vehicle.getAge() == null ? vehicle1.getAge() : vehicle.getAge())
+                .kasko(vehicle1.getKasko())
+                .color(vehicle.getColor() == null ? vehicle1.getColor() : vehicle.getColor())
+                .kilometer(vehicle.getKilometer() == null ? vehicle1.getKilometer() : vehicle.getKilometer())
+                .owner(vehicle1.getOwner())
+                .build();
+        vehicleRepository.save(newVehicle);
+        return ResponseEntity.ok(new MessageResponseDTO("Araç bilgileri başarıyla düzenlendi."));
     }
 
     @Override
     public ResponseEntity<?> deleteVehicle(String chassisNumber) {
         vehicleRepository.deleteVehicleByChassisNumber(chassisNumber);
-        return ResponseEntity.ok(new MessageResponse("Araç başarıyla silindi."));
+        return ResponseEntity.ok(new MessageResponseDTO("Araç başarıyla silindi."));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.insuranceproject.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,7 +30,8 @@ public class Vehicle {
 
     private Integer kilometer;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL}, mappedBy = "vehicle")
+    @JsonManagedReference
     private Kasko kasko;
 
     @ManyToOne

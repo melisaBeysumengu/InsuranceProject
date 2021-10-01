@@ -1,11 +1,11 @@
 package com.example.insuranceproject.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -24,14 +24,20 @@ public class House {
 
     private String address;
 
+    @NotNull(message = "boş olamaz")
     private Double value;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL}, mappedBy = "house")
+    @JsonManagedReference
     private Dask dask;
+
+    private Boolean isInDangerZone;
 
     @ManyToOne
     @JoinColumn(name="owner_tc_number")
     @JsonBackReference
     private Person owner;
+
+    private String  binaInsaTarzi;
 
 }

@@ -1,5 +1,6 @@
 package com.example.insuranceproject.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -37,14 +38,19 @@ public class Kasko {
 
     private String createdAt;
 
+    @OneToOne
+    @JoinColumn(name="vehicle_id")
+    @JsonBackReference
+    private Vehicle vehicle;
+
     public void setPrice(double price, int age, int kilometer) {
         String content = "";
         if (age < getAgeLimit()) {
             setPrice(price * ((double) (100 - getDiscount()) / 100));
-            content = "Araç yaşınız küçük olduğu için fiyat (" + price + ") üzerinden %" + getDiscount() + " indirim uygulandı.";
+            content = "Araç yaşınız küçük olduğu için fiyat (" + price + ") üzerinden %" + getDiscount() + " indirim uygulandı. ";
         }
         if (kilometer < getKilometerLimit()) {
-            content += " Araç kilometresi küçük olduğu için fiyat (" + getPrice() + ") üzerinden %" + (getDiscount()/2) + " indirim uygulandı.";
+            content += "Araç kilometresi küçük olduğu için fiyat (" + getPrice() + ") üzerinden %" + (getDiscount()/2) + " indirim uygulandı.";
             setPrice(getPrice() * ((double) (100 - (getDiscount()/2)) / 100));
         }
 

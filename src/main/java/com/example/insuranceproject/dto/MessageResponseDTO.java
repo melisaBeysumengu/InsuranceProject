@@ -6,15 +6,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MessageResponse {
+public class MessageResponseDTO {
     private String message;
     private Object content;
 
-    public MessageResponse(String message) {
+    public MessageResponseDTO(String message) {
         this.message = message;
     }
 
-    public MessageResponse(String message, Object content) {
+    public MessageResponseDTO(String message, Object content) {
         this.message = message;
         this.content = content;
     }
