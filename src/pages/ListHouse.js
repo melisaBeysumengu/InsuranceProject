@@ -1,17 +1,17 @@
-
-import axios from "axios";
-import React, { useEffect, useState } from 'react';
-import MaterialTable from 'material-table';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import { Button, Form } from "antd";
+import axios from "axios";
+import MaterialTable from 'material-table';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import localization from "../globals/MaterialTableConstants";
+import { Alert, AlertTitle } from '@material-ui/lab';
 
-const ListPerson = (props) => {
+const ListHouse = (props) => {
 
-    const [person, setPerson] = useState([]);
+    const history = useHistory();
+
+    const [house, setHouse] = useState([]);
     const [selectedRow, setSelectedRow] = useState(false);
-    const [selectedPersonRow, setSelectedPersonRow] = useState();
+    const [select, setSelect] = useState([]);
 
     const [iserror, setIserror] = useState(false);
     const [errorMessages, setErrorMessages] = useState([]);
@@ -19,53 +19,118 @@ const ListPerson = (props) => {
     const [isSuccesfull, setIsSuccesfull] = useState(false);
     const [successMessages, setSuccessMessages] = useState([]);
 
-    const history = useHistory();
-
     let columns = [
-        { title: 'TC Kimlik Numarası', field: 'tcNumber', editable: 'onAdd' },
-        { title: 'Ad', field: 'name' },
-        { title: 'Soyad', field: 'surname' },
-        { title: 'Sürüş Deneyimi ', field: 'licenceYear' },
+        { title: 'ID', field: 'id', editable: 'never' },
+        { title: 'Tehlikeli Bölgede mi?', field: 'isInDangerZone', lookup: { true: 'Evet', false: 'Hayır' }, },
+        { title: 'Evin Değeri', field: 'value' },
+        { title: 'Bina İnşa Tarzı', field: 'binaInsaTarzi' },
         { title: 'Adres', field: 'address' },
-        { title: 'Gelir', field: 'income' }
+        { title: 'Oda Sayısı', field: 'bedrooms' },
+        { title: 'Yüzölçümü', field: 'area' },
     ]
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/person/`)
+        axios.get(`http://localhost:8080/person/house/${props.match.params.tc}`)
             .then(res => {
-                const persons = res.data;
-                setPerson(persons);
-                console.log(persons)
+                const houses = res.data;
+                setHouse(houses);
             })
     }, [])
 
-    //function for updating the existing row details
-    const handleRowUpdate = (newData, oldData, resolve) => {
+    const onFinish = async (values) => {
+        if (select !== null) {
+            history.push(`/show-details/house/${select}`)
+        }
+        else {
+            alert("Araçlardan birini seçmelisin.")
+        }
+    };
+
+    const onFinishFailed = (errorInfo) => {
+        console.log("Failed:", errorInfo);
+    };
+
+    const handleRowAdd = (newData, resolve) => {
         //validating the data inputs
         let errorList = []
-        if (newData.tcNumber == null) {
-            errorList.push("TC Kimlik Numarası alanı boş bırakılamaz")
+        console.log(newData)
+        if (newData.isInDangerZone == null) {
+            errorList.push("Tehlikeli Bölgede mi? alanı boş bırakılamaz")
         }
-        if (newData.name == null) {
-            errorList.push("Ad alanı boş bırakılamaz")
+        if (newData.value == null) {
+            errorList.push("Evin Değeri alanı boş bırakılamaz")
         }
-        if (newData.surname == null) {
-            errorList.push("Soyad alanı boş bırakılamaz")
+        if (newData.binaInsaTarzi == null) {
+            errorList.push("Bina İnşa Tarzı alanı boş bırakılamaz")
         }
         if (newData.address == null) {
             errorList.push("Adres alanı boş bırakılamaz")
         }
-        if (newData.income == null) {
-            errorList.push("Gelir alanı boş bırakılamaz")
+        if (newData.bedrooms == null) {
+            errorList.push("Oda Sayısı alanı boş bırakılamaz")
+        }
+        if (newData.area == null) {
+            errorList.push("Yüzölçümü alanı boş bırakılamaz")
         }
 
         if (errorList.length < 1) {
-            axios.put(`http://localhost:8080/person/`, newData)
+            axios.put(`http://localhost:8080/person/house/${props.match.params.tc}`, newData)
                 .then(response => {
-                    const updatePerson = [...person];
+                    let newHouseData = [...house];
+                    newHouseData.push(newData);
+                    setHouse(newHouseData);
+                    setErrorMessages([])
+                    setIserror(false)
+                    setIsSuccesfull(true)
+                    setSuccessMessages([response.data.message])
+                    resolve()
+                })
+                .catch(error => {
+                    setErrorMessages([error.response.data.message])
+                    setErrorMessages(["Cannot add data. Server error!"])
+                    setIserror(true)
+                    setIsSuccesfull(false)
+                    setSuccessMessages([])
+                    resolve()
+                })
+        } else {
+            setErrorMessages(errorList)
+            setIserror(true)
+            setIsSuccesfull(false)
+            setSuccessMessages([])
+            resolve()
+        }
+    }
+
+    const handleRowUpdate = (newData, oldData, resolve) => {
+        //validating the data inputs
+        let errorList = []
+        if (newData.isInDangerZone == null) {
+            errorList.push("Tehlikeli Bölgede mi? alanı boş bırakılamaz")
+        }
+        if (newData.value == null) {
+            errorList.push("Evin Değeri alanı boş bırakılamaz")
+        }
+        if (newData.binaInsaTarzi == null) {
+            errorList.push("Bina İnşa Tarzı alanı boş bırakılamaz")
+        }
+        if (newData.address == null) {
+            errorList.push("Adres alanı boş bırakılamaz")
+        }
+        if (newData.bedrooms == null) {
+            errorList.push("Oda Sayısı alanı boş bırakılamaz")
+        }
+        if (newData.area == null) {
+            errorList.push("Yüzölçümü alanı boş bırakılamaz")
+        }
+
+        if (errorList.length < 1) {
+            axios.put(`http://localhost:8080/house/`, newData)
+                .then(response => {
+                    const updateHouse = [...house];
                     const index = oldData.tableData.id;
-                    updatePerson[index] = newData;
-                    setPerson([...updatePerson]);
+                    updateHouse[index] = newData;
+                    setHouse([...updateHouse]);
                     resolve()
                     setIserror(false)
                     setErrorMessages([])
@@ -89,14 +154,13 @@ const ListPerson = (props) => {
         }
     }
 
-    //function for deleting a row
     const handleRowDelete = (oldData, resolve) => {
-        axios.delete(`http://localhost:8080/person/${oldData.tcNumber}`)
+        axios.delete(`http://localhost:8080/house/${oldData.id}`)
             .then(response => {
-                const dataDelete = [...person];
+                const dataDelete = [...house];
                 const index = oldData.tableData.id;
                 dataDelete.splice(index, 1);
-                setPerson([...dataDelete]);
+                setHouse([...dataDelete]);
                 resolve()
                 setIsSuccesfull(true)
                 setSuccessMessages([response.data.message])
@@ -110,92 +174,24 @@ const ListPerson = (props) => {
             })
     }
 
-    //function for adding a new row to the table
-    const handleRowAdd = (newData, resolve) => {
-        //validating the data inputs
-        let errorList = []
-        console.log(newData)
-        if (newData.tcNumber == null) {
-            errorList.push("TC Kimlik Numarası alanı boş bırakılamaz")
-        }
-        if (newData.name == null) {
-            errorList.push("Ad alanı boş bırakılamaz")
-        }
-        if (newData.surname == null) {
-            errorList.push("Soyad alanı boş bırakılamaz")
-        }
-        if (newData.address == null) {
-            errorList.push("Adres alanı boş bırakılamaz")
-        }
-        if (newData.income == null) {
-            errorList.push("Gelir alanı boş bırakılamaz")
-        }
-
-        if (errorList.length < 1) {
-            axios.post(`http://localhost:8080/person/`, newData)
-                .then(response => {
-                    let newUserdata = [...person];
-                    newUserdata.push(newData);
-                    setPerson(newUserdata);
-                    resolve()
-                    setErrorMessages([])
-                    setIserror(false)
-                    setIsSuccesfull(true)
-                    setSuccessMessages([response.data.message])
-                })
-                .catch(error => {
-                    setErrorMessages(["Ekleme başarısız. Sunucuda sorun var!"])
-                    setIserror(true)
-                    setIsSuccesfull(false)
-                    setSuccessMessages([])
-                    resolve()
-                })
-        } else {
-            setErrorMessages(errorList)
-            setIserror(true)
-            setIsSuccesfull(false)
-            setSuccessMessages([])
-            resolve()
-        }
-    }
-
-    const onFinish = () => {
-        if (selectedPersonRow !== null) {
-            if (props.match.params.type === "vehicle") {
-                history.push(`/list-vehicle/${selectedPersonRow}`)
-            }
-            else if (props.match.params.type === "house") {
-                history.push(`/list-house/${selectedPersonRow}`)
-            }
-        }
-        else {
-            alert("Araçlardan birini seçmelisin.")
-        }
-    };
-
-    const onFinishFailed = (errorInfo) => {
-        console.log("Failed:", errorInfo);
-    };
-
-
     return (
         <div className="app">
             <MaterialTable
-                title="Kullanıcılar"
+                title="Ev Bilgileri"
                 columns={columns}
-                data={person}
-                localization={localization}
+                data={house}
                 options={{
                     headerStyle: { borderBottomColor: 'red', borderBottomWidth: '3px', fontFamily: 'verdana' },
                     actionsColumnIndex: -1,
+                    search: false,
                     rowStyle: rowData => ({
                         backgroundColor: (selectedRow === rowData.tableData.id) ? '#7cabe1' : '#FFF'
                     })
                 }}
                 onRowClick={((evt, selectedRow) => {
                     setSelectedRow(selectedRow.tableData.id)
-                    setSelectedPersonRow(selectedRow.tcNumber)
-                    console.log(selectedRow.tcNumber)
+                    setSelect(selectedRow.id)
+                    console.log("selected row",selectedRow.id)
                 })}
                 editable={{
                     onRowUpdate: (newData, oldData) =>
@@ -246,22 +242,21 @@ const ListPerson = (props) => {
                 onFinishFailed={onFinishFailed}
                 style={{ margin: "0 auto", width: 400 }}
             >
-                <Form.Item wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                }}
+                <Form.Item
                     wrapperCol={{
                         offset: 8,
                         span: 16
                     }}
                 >
                     <Button type="primary" htmlType="submit">
-                        Devam
+                        Teklifleri Al
                     </Button>
                 </Form.Item>
+
+
             </Form>
         </div>
     );
 }
 
-export default ListPerson;
+export default ListHouse;

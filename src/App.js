@@ -4,12 +4,13 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import "../src/styles.css";
 import CreateOffer from "./pages/CreateOffer";
-import Home from "./pages/Home";
-import LastResult from "./pages/LastResult";
-import ListOffers from "./pages/ListOffers";
+import ListHouse from "./pages/ListHouse";
+import ShowDetails from "./pages/ShowDetails";
 import ListPerson from "./pages/ListPerson";
 import ListVehicle from "./pages/ListVehicle";
-import VehicleDetails from "./pages/VehicleDetails";
+import ListInsuredHouses from "./pages/ListInsuredHouses";
+import ListInsuredVehicles from "./pages/ListInsuredVehicles";
+import ListOriginalOffers from "./pages/ListOriginalOffers";
 
 const { Header, Content, Footer , Sider} = Layout;
 
@@ -43,6 +44,14 @@ class App extends Component {
                 <span>Teklifler</span>
                 <Link to="/" />
               </Menu.Item>
+              <Menu.Item key="2">
+                <span>Sigortalı Araçlar</span>
+                <Link to="/list-insured-vehicles" />
+              </Menu.Item>
+              <Menu.Item key="3">
+                <span>Sigortalı Evler</span>
+                <Link to="/list-insured-houses" />
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout>
@@ -54,12 +63,13 @@ class App extends Component {
                 minHeight: 280
               }}
             >
-              <Route path="/" component={CreateOffer} exact />
-              <Route path="/vehicle-details" component={VehicleDetails} />
+              <Route path="/" component={ListOriginalOffers} exact />
               <Route path="/list-vehicle/:tc" component={ListVehicle} />
-              <Route path="/list-details/:chassisNumber" component={ListOffers} />
+              <Route path="/list-house/:tc" component={ListHouse} />
+              <Route path="/show-details/:type/:id" component={ShowDetails} />
               <Route path="/list-person/:type" component={ListPerson} />
-              <Route path="/last-result/" component={LastResult} />
+              <Route path="/list-insured-houses" component={ListInsuredHouses} />
+              <Route path="/list-insured-vehicles" component={ListInsuredVehicles} />
             </Content>
           </Layout>
         </Layout>

@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
-import { Form, Input, Button, Row, Col, Card } from "antd";
+import React, { useEffect, useState } from 'react'
+import { Form, Input, Button, Row, Col, Carousel, Card } from "antd";
 import { useHistory } from "react-router-dom";
 import OfferService from '../services/OfferService';
 import ListOriginalOffers from './ListOriginalOffers';
+import axios from "axios";
 
 const CreateOffer = () => {
 
     const history = useHistory();
-    const [credentials, setCredentials] = useState({});
+    const [credentials, setCredentials] = useState([]);
+    const [isCreated, setIsCreated] = useState(false);
 
     const onFinish = async (values) => {
         console.log("Success:", values);
         const response = await OfferService.createOffer(credentials)
         if (response && response.data) {
-            console.log(response.data.tcNumber)
             return true;
         } else {
             return false;
@@ -31,9 +32,20 @@ const CreateOffer = () => {
         });
     };
 
+    useEffect(() => {
+        axios.get(`http://localhost:8080/kasko/1`)
+            .then(res => {
+                const offers = res.data;
+                setIsCreated(true)
+                setCredentials(offers)
+                console.log(offers)
+            })
+    }, [])
+
     return (
         <div>
             <h1>Teklif Oluştur</h1>
+            
             <div>
                 <Row type="flex" justify="center" align="middle" >
                     <Col>
@@ -96,7 +108,7 @@ const CreateOffer = () => {
                                         value={credentials.category}
                                     />
                                 </Form.Item>
-                                
+
                                 <Form.Item
                                     label="Fiyat"
                                     name="price"
@@ -179,7 +191,8 @@ const CreateOffer = () => {
                         </Card>
                     </Col>
                 </Row>
-                <ListOriginalOffers/>
+
+                <ListOriginalOffers />
             </div>
         </div>
     )

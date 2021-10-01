@@ -4,6 +4,7 @@ import MaterialTable from 'material-table';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { Alert, AlertTitle } from '@material-ui/lab';
+import localization from "../globals/MaterialTableConstants";
 
 const ListVehicle = (props) => {
 
@@ -37,7 +38,7 @@ const ListVehicle = (props) => {
 
     const onFinish = async (values) => {
         if (select !== null) {
-            history.push(`/list-details/${select}`)
+            history.push(`/show-details/vehicle/${select}`)
         }
         else {
             alert("Araçlardan birini seçmelisin.")
@@ -96,6 +97,75 @@ const ListVehicle = (props) => {
         }
     }
 
+    const handleRowUpdate = (newData, oldData, resolve) => {
+        //validating the data inputs
+        let errorList = []
+        if (newData.chassisNumber == null) {
+            errorList.push("Şasi Numarası alanı boş bırakılamaz")
+        }
+        if (newData.plateNumber == null) {
+            errorList.push("Plaka alanı boş bırakılamaz")
+        }
+        if (newData.color == null) {
+            errorList.push("Renk alanı boş bırakılamaz")
+        }
+        if (newData.age == null) {
+            errorList.push("Araç Yaşı alanı boş bırakılamaz")
+        }
+        if (newData.kilometer == null) {
+            errorList.push("Araç Kilometresi alanı boş bırakılamaz")
+        }
+
+        if (errorList.length < 1) {
+            axios.put(`http://localhost:8080/vehicle/`, newData)
+                .then(response => {
+                    const updateVehicle = [...vehicle];
+                    const index = oldData.tableData.id;
+                    updateVehicle[index] = newData;
+                    setVehicle([...updateVehicle]);
+                    resolve()
+                    setIserror(false)
+                    setErrorMessages([])
+                    setIsSuccesfull(true)
+                    setSuccessMessages([response.data.message])
+                })
+                .catch(error => {
+                    setErrorMessages(["Güncelleme başarısız. Sunucuda sorun var!"])
+                    setIserror(true)
+                    setIsSuccesfull(false)
+                    setSuccessMessages([])
+                    resolve()
+
+                })
+        } else {
+            setErrorMessages(errorList)
+            setIserror(true)
+            setIsSuccesfull(false)
+            setSuccessMessages([])
+            resolve()
+        }
+    }
+
+    const handleRowDelete = (oldData, resolve) => {
+        axios.delete(`http://localhost:8080/vehicle/${oldData.chassisNumber}`)
+            .then(response => {
+                const dataDelete = [...vehicle];
+                const index = oldData.tableData.id;
+                dataDelete.splice(index, 1);
+                setVehicle([...dataDelete]);
+                resolve()
+                setIsSuccesfull(true)
+                setSuccessMessages([response.data.message])
+            })
+            .catch(error => {
+                setErrorMessages(["Silme başarısız. Sunucuda sorun var!"])
+                setIserror(true)
+                setIsSuccesfull(false)
+                setSuccessMessages([])
+                resolve()
+            })
+    }
+
     return (
         <div className="app">
             <MaterialTable
@@ -115,10 +185,19 @@ const ListVehicle = (props) => {
                     setSelect(selectedRow.chassisNumber)
                     console.log(selectedRow.chassisNumber)
                 })}
+                localization={localization}
                 editable={{
+                    onRowUpdate: (newData, oldData) =>
+                        new Promise((resolve) => {
+                            handleRowUpdate(newData, oldData, resolve);
+                        }),
                     onRowAdd: (newData) =>
                         new Promise((resolve) => {
                             handleRowAdd(newData, resolve)
+                        }),
+                    onRowDelete: (oldData) =>
+                        new Promise((resolve) => {
+                            handleRowDelete(oldData, resolve)
                         }),
                 }}
             />

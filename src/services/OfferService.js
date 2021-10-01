@@ -4,7 +4,7 @@ const OfferService = (function () {
 
     const _createOffer = async (credentials) => {
         console.log(credentials)
-        const request = await axios.post("http://localhost:8080/offer/",credentials)
+        const request = await axios.post("http://localhost:8080/kasko/",credentials)
         .then((response) => response.data)
         .catch((error) => error);
 

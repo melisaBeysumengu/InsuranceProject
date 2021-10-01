@@ -9,7 +9,7 @@ import { Descriptions } from 'antd';
 
 export default function ListOffers(props) {
 
-    const [vehicleInfo, setVehicleInfo] = useState([]);
+    const [propertyInfo, setPropertyInfo] = useState([]);
     const [personInfo, setPersonInfo] = useState([]);
     const [offerInfo, setOfferInfo] = useState([]);
 
@@ -20,63 +20,44 @@ export default function ListOffers(props) {
     const [successMessages, setSuccessMessages] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/vehicle/${props.match.params.chassisNumber}`)
+        axios.get(`http://localhost:8080/${props.match.params.type}/${props.match.params.id}`)
             .then(async res => {
-                const vehicleDetail = res.data;
-                setVehicleInfo(vehicleDetail);
+                const propertyDetail = res.data;
+                setPropertyInfo(propertyDetail);
+                console.log(propertyDetail)
             })
 
-        axios.get(`http://localhost:8080/vehicle/owner/${props.match.params.chassisNumber}`)
+        axios.get(`http://localhost:8080/${props.match.params.type}/owner/${props.match.params.id}`)
             .then(async res => {
                 const ownerDetail = res.data;
-                console.log(res.data)
                 setPersonInfo(ownerDetail);
             })
 
-        axios.put(`http://localhost:8080/vehicle/${props.match.params.chassisNumber}/1`)
+        axios.put(`http://localhost:8080/${props.match.params.type}/${props.match.params.id}/1`)
             .then((response) => {
                 setErrorMessages([])
                 setIserror(false)
                 setIsSuccesfull(true)
                 setSuccessMessages([response.data.message])
-                console.log(response)
                 setOfferInfo(response.data.content)
             })
             .catch((error) => {
-                setErrorMessages(["Ekleme başarısız. Sunucuda sorun var!"])
+                console.log(error.response.data.content)
+                setOfferInfo(error.response.data.content)
+                setErrorMessages([error.response.data.message])
                 setIserror(true)
                 setIsSuccesfull(false)
                 setSuccessMessages([])
             });
-
-
-        // axios.get(`http://localhost:8080/vehicle/${props.match.params.chassisNumber}`)
-        //     .then(res => {
-        //         const presentOffers = res.data;
-        //         setPresentOffer(presentOffers);
-        //     })
-
     }, [])
-
-    // const onFinish = async () => {
-    //     console.log("on finish: ", select)
-    //     console.log(`http://localhost:8080/vehicle/${props.match.params.chassisNumber}/${select}`)
-    //     const request = await axios.put(`http://localhost:8080/vehicle/${props.match.params.chassisNumber}/${select}`)
-    //         .then((response) => { console.log(response.data) })
-    //         .catch((error) => error);
-    // };
-
-    // const onFinishFailed = (errorInfo) => {
-    //     console.log("Failed:", errorInfo);
-    // };
 
     return (
 
         <div className="card text-center m-3">
             <div>
                 {iserror &&
-                    <Alert severity="error" variant="filled">
-                        <AlertTitle>HATA</AlertTitle>
+                    <Alert severity="warning" variant="filled">
+                        <AlertTitle>UYARI</AlertTitle>
                         {errorMessages.map((msg, i) => {
                             return <div><strong key={i}>{msg}</strong><br /></div>
                         })}
@@ -97,6 +78,7 @@ export default function ListOffers(props) {
                 <Descriptions
                     title="Sürücü Bilgileri"
                     bordered
+                    size="small"
                     column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
                     labelStyle={{ backgroundColor: "#b2d8d8" }}
                 >
@@ -108,28 +90,52 @@ export default function ListOffers(props) {
                     <Descriptions.Item label="Sürüş Deneyimi">{personInfo.licenceYear}</Descriptions.Item>
                 </Descriptions>
                 <br /><br />
+
+                {props.match.params.type==="vehicle" &&
+
                 <Descriptions
                     title="Araç Bilgileri"
                     bordered
+                    size="small"
                     column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
                     labelStyle={{ backgroundColor: "#b2d8d8" }}
                 >
-                    <Descriptions.Item label="Şasi Numarası">{vehicleInfo.chassisNumber}</Descriptions.Item>
-                    <Descriptions.Item label="Araç Yaşı">{vehicleInfo.age}</Descriptions.Item>
-                    <Descriptions.Item label="Araç Kilometre">{vehicleInfo.kilometer}</Descriptions.Item>
-                    <Descriptions.Item label="Plaka Numarası">{vehicleInfo.plateNumber}</Descriptions.Item>
-                    <Descriptions.Item label="Renk">{vehicleInfo.color}</Descriptions.Item>
+                    <Descriptions.Item label="Şasi Numarası">{propertyInfo.chassisNumber}</Descriptions.Item>
+                    <Descriptions.Item label="Araç Yaşı">{propertyInfo.age}</Descriptions.Item>
+                    <Descriptions.Item label="Araç Kilometre">{propertyInfo.kilometer}</Descriptions.Item>
+                    <Descriptions.Item label="Plaka Numarası">{propertyInfo.plateNumber}</Descriptions.Item>
+                    <Descriptions.Item label="Renk">{propertyInfo.color}</Descriptions.Item>
                 </Descriptions>
+                }
+
+                {props.match.params.type==="house"  &&
+                <Descriptions
+                    title="Ev Bilgileri"
+                    bordered
+                    size="small"
+                    column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+                    labelStyle={{ backgroundColor: "#b2d8d8" }}
+                >
+                    <Descriptions.Item label="Tehlikeli Bölgede mi?">{propertyInfo.isInDangerZone ? "Evet" : "Hayır"}</Descriptions.Item>
+                    <Descriptions.Item label="Evin Değeri">{propertyInfo.value}</Descriptions.Item>
+                    <Descriptions.Item label="Bina İnşa Tarzı">{propertyInfo.binaInsaTarzi}</Descriptions.Item>
+                    <Descriptions.Item label="Adres">{propertyInfo.address}</Descriptions.Item>
+                    <Descriptions.Item label="Oda Sayısı">{propertyInfo.bedrooms}</Descriptions.Item>
+                    <Descriptions.Item label="Yüzölçümü">{propertyInfo.area}</Descriptions.Item>
+                </Descriptions>
+                }
                 <br /><br />
                 <Descriptions
                     title="Teklif Bilgileri"
                     bordered
+                    size="small"
                     column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
                     labelStyle={{ backgroundColor: "#b2d8d8" }}
                 >
                     <Descriptions.Item label="Başlık">{offerInfo.title}</Descriptions.Item>
-                    <Descriptions.Item label="Fiyat">{offerInfo.price}</Descriptions.Item>
+                    <Descriptions.Item label="Oluşturulma Tarihi">{offerInfo.createdAt}</Descriptions.Item>
                     <Descriptions.Item label="Sigorta Şirketi">{offerInfo.provider}</Descriptions.Item>
+                    <Descriptions.Item label="Fiyat">{offerInfo.price} ₺</Descriptions.Item>
                     <Descriptions.Item label="İçerik">{offerInfo.content}</Descriptions.Item>
                 </Descriptions>
             </div>
